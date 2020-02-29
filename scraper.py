@@ -14,9 +14,15 @@ string_dict = {'E': 'E0', 'A': 'A1', 'D': 'D1', 'G': 'G1', 'B': 'B2', 'e': 'E2'}
 
 # This function converts a note in tab form to a note
 def note_from_tab(fret, string):
-    string = string_dict.get(string)
+    if string in string_dict:
+        string = string_dict.get(string)
+    elif string.upper() in string_dict:
+        string = string_dict.get(string.upper())
     i = scale.index(string)
-    note = scale[i + fret]
+    try:
+        note = scale[i + fret]
+    except:
+        note = scale[i + int(str(fret)[0:2])]
     return note
 
 
@@ -72,6 +78,20 @@ def quickSort(arr, arr2, arr3, low, high):
 def get_urls(tab_page):
     response = requests.get(tab_page)
     soup = BeautifulSoup(response.text, 'html.parser')
+    text = soup.findAll('div', {'class': 'js-store'})
+    links = re.split(r'https://', str(text))
+    good_links = []
+    for i, link in enumerate(links):
+        if link[0:4] == 'tabs':
+            good_links.append(link)
+    pattern = re.compile(r'&quot.+')
+    final_urls = []
+    for link in good_links:
+        excess = re.search(r'&quot.+', link)[0]
+        link = link[:-len(excess)]
+        link = 'https://' + link
+        final_urls.append(link)
+    return final_urls
 
 
 url = r'https://tabs.ultimate-guitar.com/tab/led-zeppelin/stairway-to-heaven-tabs-9488'
@@ -96,9 +116,13 @@ def url_to_notes(url):
             lin = lin.replace('[/tab]', '')
             lin = lin.replace('\\r', '')
             lin = lin.replace('\\\\', '\\')
-            match = re.compile(r'\w\|.+\|$')
+            lin = lin.replace('||', '|')
+            match = re.compile(r'^\w\|.+\|.*$')
             if match.search(lin):
                 string_start = lin[0]
+                if ' ' in lin:
+                    splits = re.split(r'\|', lin)
+                    lin = lin.replace(splits[-1], '')
                 if string_start == tuning[0]:
                     string_1 = (string_1 + lin).replace('|' + tuning[0] + '|', '|')
                 elif string_start == tuning[1]:
@@ -111,18 +135,25 @@ def url_to_notes(url):
                     string_5 = (string_5 + lin).replace('|' + tuning[4] + '|', '|')
                 elif string_start == tuning[5]:
                     string_6 = (string_6 + lin).replace('|' + tuning[5] + '|', '|')
-
-    print(string_6)
-    print(string_5)
-    print(string_4)
-    print(string_3)
-    print(string_2)
-    print(string_1)
+                elif string_start in tuning.lower():
+                    if string_start == tuning.lower()[1]:
+                        string_2 = (string_2 + lin).replace('|' + string_start + '|', '|')
+                    elif string_start == tuning.lower()[2]:
+                        string_3 = (string_3 + lin).replace('|' + string_start + '|', '|')
+                    elif string_start == tuning.lower()[3]:
+                        string_4 = (string_4 + lin).replace('|' + string_start + '|', '|')
+                    elif string_start == tuning.lower()[4]:
+                        string_5 = (string_5 + lin).replace('|' + string_start + '|', '|')
     print()
-    if string_1[0] != 'E' or string_2[0] != 'A' or string_3[0] != 'D' or string_4[0] != 'G' or string_5[0] != 'B' or string_6[0] != 'e':
-        print('Non-standard tuning')
-        return 'NA', 'NA'
+    print()
     strings = string_1, string_2, string_3, string_4, string_5, string_6
+    for string in strings[-1::-1]:
+        print(string)
+
+    for i, string in enumerate(strings[:-1]):
+        if len(string) != len(strings[i + 1]) or len(string) == 0:
+            print('Non-standard tuning')
+            return 'NA', 'NA'
     notes = []
     indices = []
     tabs = []
@@ -140,7 +171,7 @@ def url_to_notes(url):
         n = i
         dups = 0
         while True:
-            if i < len(indices) - 2:
+            if n + 1 < len(indices):
                 if indices[n + 1] == index:
                     dups += 1
                     n += 1
