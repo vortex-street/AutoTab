@@ -1,7 +1,6 @@
+from __future__ import print_function
 from bs4 import BeautifulSoup
-import urllib.request
 import requests
-import time
 import re
 
 scale = ['A0', 'A+0', 'B0', 'C0', 'C+0', 'D0', 'D+0', 'E0', 'F0', 'F+0', 'G0', 'G+0',
@@ -75,6 +74,7 @@ def quickSort(arr, arr2, arr3, low, high):
         quickSort(arr, arr2, arr3, pi + 1, high)
 
 
+# This function gets the urls from a tab page on ultimate guitar
 def get_urls(tab_page):
     response = requests.get(tab_page)
     soup = BeautifulSoup(response.text, 'html.parser')
@@ -94,7 +94,23 @@ def get_urls(tab_page):
     return final_urls
 
 
-url = r'https://tabs.ultimate-guitar.com/tab/led-zeppelin/stairway-to-heaven-tabs-9488'
+# This function parses the name of the song from the URL
+def parse_name(url):
+    splits = re.split(r'/', url)
+    name = splits[-1]
+    new_splits = re.split(r'-', name)
+    new_name = new_splits[:-2]
+    title = ''
+    for word in new_name:
+        new_word = ''
+        for i, letter in enumerate(word):
+            if i == 0:
+                new_letter = letter.upper()
+            else:
+                new_letter = letter
+            new_word = new_word + new_letter
+        title = title + new_word + ' '
+    return title
 
 
 def url_to_notes(url):
@@ -144,16 +160,12 @@ def url_to_notes(url):
                         string_4 = (string_4 + lin).replace('|' + string_start + '|', '|')
                     elif string_start == tuning.lower()[4]:
                         string_5 = (string_5 + lin).replace('|' + string_start + '|', '|')
-    print()
-    print()
+
     strings = string_1, string_2, string_3, string_4, string_5, string_6
-    for string in strings[-1::-1]:
-        print(string)
 
     for i, string in enumerate(strings[:-1]):
         if len(string) != len(strings[i + 1]) or len(string) == 0:
-            print('Non-standard tuning')
-            return 'NA', 'NA'
+            return '', ''
     notes = []
     indices = []
     tabs = []
