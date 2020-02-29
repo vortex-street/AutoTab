@@ -11,7 +11,7 @@ for page in range(1, 10):
     for url in new_urls:
         urls.append(url)
 
-with open('Data.txt', 'w') as new_file:
+with open('data.txt', 'w') as new_file:
     new_file.write('notes, tabs\n')
 previous_titles = []
 
@@ -31,7 +31,7 @@ for url in urls:
             print('Not successful')
             print()
             continue
-        with open('Data.txt', 'a') as file:
+        with open('data.txt', 'a') as file:
             added = False
             for note, tab in zip(notes, tabs):
                 file.write(note + ', ' + tab + '\n')

@@ -1,4 +1,4 @@
-notes, tabs
+note, tab
 A2, D7
 C2, G5
 E2, B5
