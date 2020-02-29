@@ -34,7 +34,7 @@ for url in urls:
         with open('data.txt', 'a') as file:
             added = False
             for note, tab in zip(notes, tabs):
-                file.write(note + ', ' + tab + '\n')
+                file.write(note + ',' + tab + '\n')
                 added = True
             if added:
                 file.write('END, END\n')

@@ -38,15 +38,18 @@ def in_key(note):
     return key_truth
 
 
-with open(data_test.csv) as file:
-    csv_reader = csv.reader(file, delimiter=', ')
+with open('data_test.csv') as file:
+    csv_reader = csv.reader(file, delimiter=',')
     line_number = 0
-    for line in file:
-        if line_number == 0:
+    for line in csv_reader:
+        line_number += 1
+        if line_number == 1:
             continue
         else:
             note = line[0]
             tab = line[1]
+            print(note)
+            print(tab)
             notes_in_cluster = len(tab) / 2
             if notes_in_cluster > 1:
-                print(re.split(r'\d', notes_in_cluster))
+                print(re.split(r'\d', note))
