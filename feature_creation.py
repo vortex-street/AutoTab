@@ -1,9 +1,11 @@
 import numpy as np
+import functools as fn
 import csv
 import re
 
 
 def in_key(note):
+    print(note)
     A = ['A', 'B', 'C+', 'D', 'E', 'F+', 'G+']
     B = ['B', 'C+', 'D+', 'E', 'F+', 'G+', 'A+']
     C = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
@@ -29,8 +31,8 @@ def in_key(note):
     F_m = A
     G_m = B
     key_truth = []
-    for i, key in enumerate(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'A_', 'C_', 'D_', 'F_', 'G_',
-                             'Am', 'Bm', 'Cm', 'Dm', 'Em', 'Fm', 'Gm', 'A_m', 'C_m', 'D_m', 'F_m', 'G_']):
+    for i, key in enumerate([A, B, C, D, E, F, G, A_, C_, D_, F_, G_,
+                             Am, Bm, Cm, Dm, Em, Fm, Gm, A_m, C_m, D_m, F_m, G_m]):
         if note in key:
             key_truth.append(True)
         else:
@@ -48,8 +50,10 @@ with open('data_test.csv') as file:
         else:
             note = line[0]
             tab = line[1]
-            print(note)
-            print(tab)
             notes_in_cluster = len(tab) / 2
-            if notes_in_cluster > 1:
-                print(re.split(r'\d', note))
+            notes = note.split(';')
+            tabs = tab.split(';')
+            for tab, note in zip(tabs, notes):
+                keys = in_key(note[:-1])
+                print(keys)
+

@@ -2,7 +2,7 @@ from scraper_fun import get_urls, url_to_notes, parse_name
 
 top_tabs_url = r'https://www.ultimate-guitar.com/explore?type[]=Tabs&&order=hitstotal_desc'
 urls = []
-for page in range(1, 10):
+for page in range(1, 1000):
     if page == 1:
         next_page = top_tabs_url
     else:
@@ -11,7 +11,7 @@ for page in range(1, 10):
     for url in new_urls:
         urls.append(url)
 
-with open('data.txt', 'w') as new_file:
+with open('data_huge.txt', 'w') as new_file:
     new_file.write('notes, tabs\n')
 previous_titles = []
 
@@ -31,7 +31,7 @@ for url in urls:
             print('Not successful')
             print()
             continue
-        with open('data.txt', 'a') as file:
+        with open('data_huge.txt', 'a') as file:
             added = False
             for note, tab in zip(notes, tabs):
                 file.write(note + ',' + tab + '\n')
