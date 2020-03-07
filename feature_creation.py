@@ -1,35 +1,9 @@
-import numpy as np
-import functools as fn
+from ds import *
 import csv
-import re
 
 
 def in_key(note):
     print(note)
-    A = ['A', 'B', 'C+', 'D', 'E', 'F+', 'G+']
-    B = ['B', 'C+', 'D+', 'E', 'F+', 'G+', 'A+']
-    C = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
-    D = ['D', 'E', 'F+', 'G', 'A', 'B', 'C+']
-    E = ['E', 'F+', 'G+', 'A', 'B', 'C+', 'D+']
-    F = ['F', 'G', 'A', 'A+', 'C', 'D', 'E']
-    G = ['G', 'A', 'B', 'C', 'D', 'E', 'F+']
-    A_ = ['A+', 'C', 'D', 'D+', 'F', 'G', 'A']
-    C_ = ['C+', 'D+', 'F', 'F+', 'G+', 'A+', 'C']
-    D_ = ['D+', 'F', 'G', 'G+', 'A+', 'C', 'D']
-    F_ = ['F+', 'G+', 'A+', 'B', 'C+', 'D+', 'F']
-    G_ = ['G+', 'A+', 'C', 'C+', 'D+', 'F', 'G']
-    Am = C
-    Bm = D
-    Cm = D_
-    Dm = F
-    Em = G
-    Fm = G_
-    Gm = A_
-    A_m = C_
-    C_m = E
-    D_m = F_
-    F_m = A
-    G_m = B
     key_truth = []
     for i, key in enumerate([A, B, C, D, E, F, G, A_, C_, D_, F_, G_,
                              Am, Bm, Cm, Dm, Em, Fm, Gm, A_m, C_m, D_m, F_m, G_m]):
